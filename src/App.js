@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/home";
 import DashBoard from "./pages/dashBoard";
@@ -7,22 +7,30 @@ import SignUp from "./pages/signup";
 import ResetPassword from "./pages/resetPassword";
 import PageNotFound from "./pages/pageNotFound";
 
+import { AuthProvider } from "./Auth";
+import PrivateRoute from "./components/router/privateRoute";
+
 function App() {
   return (
-    <div className="App">
-      <Router>
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<DashBoard />}>
-            //TODO: Validate the user exist
-          </Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route exact path="/" element={<Home />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <DashBoard />
+              </PrivateRoute>
+            }
+          />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/signup" element={<SignUp />} />
+          <Route exact path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </Router>
-    </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
